@@ -46,4 +46,17 @@ public class ChallengeDayController {
         }
     }
 
+    @PutMapping("/tasks/{date}/{taskId}/revert")
+    public ResponseEntity<?> markAsIncomplete(@PathVariable LocalDate date, @PathVariable Long taskId) {
+        try {
+            return new ResponseEntity<>(challengeDayService.markAsIncomplete(date, taskId), HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("Task not found with ID: " + taskId, HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            return new ResponseEntity<>("An error occurred: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
 }

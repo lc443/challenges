@@ -51,8 +51,8 @@ public class ChallengeService {
         }
     }
 
-//    @Scheduled(cron = "0 0 6 * * ?") // Runs daily at 6 AM
-    @Scheduled(fixedRate = 20000)
+    @Scheduled(cron = "0 0 6 * * ?") // Runs daily at 6 AM
+//    @Scheduled(fixedRate = 20000)
     @Transactional
     public void preloadTasksForChallengeDay() {
         LocalDate today = LocalDate.now();
