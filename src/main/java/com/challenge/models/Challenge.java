@@ -3,10 +3,7 @@ package com.challenge.models;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,6 +13,7 @@ import java.util.List;
 @Data
 @Builder
 @Entity
+@ToString
 public class Challenge {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +26,7 @@ public class Challenge {
     @JsonBackReference
     private User user;
 
+    @ToString.Exclude
     @JsonManagedReference
     @OneToMany(mappedBy = "challenge", cascade = CascadeType.ALL)
     private List<ChallengeDay> challengeDays;

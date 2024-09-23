@@ -51,13 +51,10 @@ public class ChallengeService {
         }
     }
 
-    @Scheduled(cron = "0 0 6 * * ?") // Runs daily at 6 AM
-//    @Scheduled(fixedRate = 20000)
+    @Scheduled(cron = "0 0 6 * * ?") // Runs daily at 6 A
     @Transactional
     public void preloadTasksForChallengeDay() {
         LocalDate today = LocalDate.now();
-
-
         // Find all ChallengeDays for today
         List<ChallengeDay> todayChallengeDays = challengeDayRepository.findAllByDate(today);
 

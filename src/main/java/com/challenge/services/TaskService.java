@@ -42,15 +42,19 @@ public class TaskService {
     }
 
     // Mark a specific task as completed
-    public Task completeTask(Long taskId) throws NoSuchElementException {
-        Optional<Task> taskOptional = taskRepository.findById(taskId);
-        if (taskOptional.isEmpty()) {
-            throw new NoSuchElementException("Task with ID " + taskId + " not found.");
-        }
-        Task task = taskOptional.get();
-        task.setCompleted(true);
-        task.setCompletedTime(LocalDateTime.now());
-        return taskRepository.save(task);
+    public ChallengeDay completeTask(Long taskId, boolean isComplete) throws NoSuchElementException {
+       Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new IllegalArgumentException("Task not found with ID: " + taskId));
+
+        task.setCompleted(isComplete);
+        task.setCompletedTime(isComplete ? LocalDateTime.now() : null);
+
+
+        taskRepository.save(task);
+        ChallengeDay challengeDay = task.getChallengeDay();
+        challengeDayRepository.save(challengeDay);
+
+        return challengeDay;
     }
 
     // Get a single task by ID
