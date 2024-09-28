@@ -22,9 +22,15 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public ResponseEntity<User> loginUser(@PathVariable String username) {
-        return userService.getUserByUsername(username)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<?> loginUser(@PathVariable String username) {
+        User user =  userService.getUserByUsername(username).orElse(null);
+        if(user == null) {
+            return ResponseEntity.ok().body("User not found with username: " + username);
+        }
+        return ResponseEntity.ok().body(user);
+
+
     }
+
+
 }

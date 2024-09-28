@@ -6,13 +6,9 @@ import com.challenge.repositories.ChallengeDayRepository;
 import com.challenge.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 @Service
 public class TaskService {
@@ -32,14 +28,6 @@ public class TaskService {
     @Autowired
     private ChallengeDayRepository challengeDayRepository;
 
-    // Get all tasks for a specific challenge day (by date)
-    public List<Task> getTasksByChallengeDay(LocalDate date) throws NoSuchElementException {
-        Optional<ChallengeDay> challengeDay = challengeDayRepository.findById(date);
-        if (challengeDay.isEmpty()) {
-            throw new NoSuchElementException("No ChallengeDay found for date: " + date);
-        }
-        return challengeDay.get().getTasks();
-    }
 
     // Mark a specific task as completed
     public ChallengeDay completeTask(Long taskId, boolean isComplete) throws NoSuchElementException {
@@ -52,7 +40,12 @@ public class TaskService {
 
         taskRepository.save(task);
         ChallengeDay challengeDay = task.getChallengeDay();
+
+        challengeDay.updateCompletionStatus();
+        challengeDay.updateProgress();
+
         challengeDayRepository.save(challengeDay);
+
 
         return challengeDay;
     }
@@ -64,31 +57,4 @@ public class TaskService {
     }
 
     // Optionally, you can add a method to update task details
-    public Task updateTask(Long taskId, String failureReason) throws NoSuchElementException {
-        Task task = getTaskById(taskId);
-        task.setFailureReason(failureReason);
-        return taskRepository.save(task);
-    }
-
-    public void assignTasksToChallengeDay(ChallengeDay challengeDay) {
-        // Check if the ChallengeDay already has tasks
-        if (challengeDay.getTasks().isEmpty()) {
-            TASK_MAP.forEach((name, description) -> {
-                Task task = new Task();
-                task.setName(name);
-                task.setDescription(description);
-                task.setCompleted(false); // Not completed when assigned
-                task.setChallengeDay(challengeDay);
-
-                // Save the task
-                taskRepository.save(task);
-
-                // Add the task to the challengeDay's task list
-                challengeDay.getTasks().add(task);
-            });
-
-            // Save the updated ChallengeDay
-            challengeDayRepository.save(challengeDay);
-        }
-    }
 }

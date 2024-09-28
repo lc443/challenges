@@ -29,12 +29,10 @@ public class ChallengeDayController {
     private final TaskService taskService;
 
     // Get all tasks for a specific challenge day by the date
-    @GetMapping("/{date}")
-    public ResponseEntity<?> getChallengeDay(@PathVariable String date) {
-
+    @GetMapping("/{date}/{id}")
+    public ResponseEntity<?> getChallengeDay(@PathVariable String date, @PathVariable Long id) {
             LocalDate challengeDate = LocalDate.parse(date);
-            return new ResponseEntity<>(challengeDayService.findById(challengeDate), HttpStatus.OK);
-
+            return new ResponseEntity<>(challengeDayService.findDayByChallengeAndDate(id, challengeDate), HttpStatus.OK);
     }
 
     // Mark a task as completed for a specific challenge day
@@ -42,6 +40,7 @@ public class ChallengeDayController {
     public ResponseEntity<?> markTaskAsCompletedOrIncomplete( @PathVariable Long taskId, @PathVariable boolean completed ) {
             return new ResponseEntity<>(taskService.completeTask(taskId, completed), HttpStatus.OK);
     }
+
 
 //    @PutMapping("/tasks/{taskId}/reason")
 //    public ResponseEntity<?> updateFailureReason( @PathVariable Long taskId, @RequestBody boolean isComplete ) {

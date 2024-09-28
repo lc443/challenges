@@ -15,5 +15,5 @@ spring:
         default_schema:
 #        format_sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     show-sql: true
